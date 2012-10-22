@@ -12,7 +12,7 @@ module Dragonfly
       end
 
       def retrieve(uid)
-        response = HTTParty.get uid, :timeout => 3
+        response = HTTParty.get uid, :timeout => Rails.env.development? ? 10 : 3
         unless response.ok?
           #raise Forbidden if response.code == 403
           raise DataNotFound
