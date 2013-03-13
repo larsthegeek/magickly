@@ -14,7 +14,7 @@ Blog post about how it's used at Jux:
 
 ## Installation
 
-[Compatible](http://travis-ci.org/#!/afeld/magickly) with Ruby 1.8.7, 1.9.2 and 1.9.3.  Requires Imagemagick >= v6.2.4.
+[Compatible](http://travis-ci.org/#!/afeld/magickly) with Ruby 1.8.7, 1.9.2 and 1.9.3, and jRuby 1.8 and 1.9 mode.  Requires Imagemagick >= v6.2.4.
 
     $ gem install magickly
 
@@ -28,7 +28,9 @@ A few options:
     $ gem install thin
     $ thin start
 
-The app can be accessed at [http://localhost:3000](http://localhost:3000).  To deploy to Heroku's Cedar stack (or another server using Foreman), see the [cedar](https://github.com/afeld/magickly/tree/cedar) branch.
+The app can be accessed at [http://localhost:3000](http://localhost:3000).
+
+When running as an app, Rack::Cache is used to cache generated versions of images. These cached files and metadata are stored in the tmp/ directory and will get regenerated as necessary.
 
 ### B. Use as an endpoint in another Rack app
 
@@ -154,6 +156,18 @@ the new URL would be
 
 	http://magickly.jux.com/q/src/http%3A%2F%2Fupload.wikimedia.org%2Fwikipedia%2Fcommons%2Fthumb%2F0%2F0d%2FImagemagick-logo.png%2F200px-Imagemagick-logo.png/thumb/200x100
 
+## Encoded Syntax
+
+Sometimes, you just can't handle escaped entities in your URLs (Facebook's handling of OpenGraph tags, for example). In those cases, we provide a Base64 encoded syntax which is an extension of the path-based Alternate Syntax above. Once your path-based url is constructed (see "Alternate Syntax" above), simply pass everything after the `q/` through Base64.urlsafe_encode or the javascript btoa() function and send it to the `qe/` endpoint instead.
+
+Therefore, instead of
+
+	http://magickly.jux.com/q/src/http%3A%2F%2Fupload.wikimedia.org%2Fwikipedia%2Fcommons%2Fthumb%2F0%2F0d%2FImagemagick-logo.png%2F200px-Imagemagick-logo.png/thumb/200x100
+
+the new URL would be
+
+	http://magickly.jux.com/qe/c3JjL2h0dHAlM0ElMkYlMkZ1cGxvYWQud2lraW1lZGlhLm9yZyUyRndpa2lwZWRpYSUyRmNvbW1vbnMlMkZ0aHVtYiUyRjAlMkYwZCUyRkltYWdlbWFnaWNrLWxvZ28ucG5nJTJGMjAwcHgtSW1hZ2VtYWdpY2stbG9nby5wbmcvdGh1bWIvMjAweDEwMA==
+
 ## Analyzers
 
 Magickly v1.2.0 introduces the ability to retrieve image properties via a REST API.  For example, to retrieve the number of colors in the photo, visit:
@@ -180,16 +194,6 @@ See the [Dragonfly documentation](http://markevans.github.com/dragonfly/file.Gen
 ## Disclaimer
 
 The hosted version of the app ([magickly.jux.com](http://magickly.jux.com)) is a single app instance intended for demonstration purposes - if you are going to be making a large number of API calls to it or would like to use it in production, please let us know :-)
-
-## Contributing to magickly
- 
-* Check out the latest master to make sure the feature hasn't been implemented or the bug hasn't been fixed yet
-* Check out the issue tracker to make sure someone already hasn't requested it and/or contributed it
-* Fork the project
-* Start a feature/bugfix branch
-* Commit and push until you are happy with your contribution
-* Make sure to add tests for it. This is important so I don't break it in a future version unintentionally.
-* Please try not to mess with the Rakefile, version, or history. If you want to have your own version, or is otherwise necessary, that is fine, but please isolate to its own commit so I can cherry-pick around it.
 
 ## Credits
 
